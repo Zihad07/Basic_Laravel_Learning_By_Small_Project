@@ -18,3 +18,19 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+
+// Middle ware
+Route::get('/admin/user/role',[
+    'middleware'=>'isAdmin',
+    function(){
+        return "Middleware role";
+    }
+]);
+
+
+Route::get('/admin','AdminContrller@index');
+
+// ----------------------------------------------------------
+Route::get('session/get','SessionController@accessSessionData');
+Route::get('session/set','SessionController@storeSessionData');
+Route::get('session/remove','SessionController@deleteSessionData');

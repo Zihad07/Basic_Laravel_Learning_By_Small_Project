@@ -15,4 +15,9 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/about','AboutController@index');
+Route::get('mytasks','TodosController@index');
+Route::get('mytasks/{todo}','TodosController@show');
+
+Route::get('new-todos','TodosController@create');
+Route::post('store-todos','TodosController@store');
+

@@ -81,7 +81,10 @@
 
             <div class="content">
                 <div class="title m-b-md">
-                    My Task-Manager
+                    
+                      <a href="/mytasks">My Tasks Manager</a>
+                     
+                    
                 </div>
 
                 

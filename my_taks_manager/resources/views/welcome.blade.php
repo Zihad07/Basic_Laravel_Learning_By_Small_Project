@@ -81,13 +81,15 @@
 
             <div class="content">
                 <div class="title m-b-md">
-                    
+
                       <a href="/mytasks">My Tasks Manager</a>
-                     
-                    
+
+
+
+
                 </div>
 
-                
+
             </div>
         </div>
     </body>

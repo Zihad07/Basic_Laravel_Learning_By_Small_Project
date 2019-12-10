@@ -18,9 +18,17 @@ class TodosController extends Controller
         return view('Todos.index', compact('todos'));
     }
 
-    public function show($todoId){
-        
-        $todo = Todo::findOrFail($todoId);
+    // public function show($todoId){
+
+    //     $todo = Todo::findOrFail($todoId);
+    //     return view('Todos.show', compact('todo'));
+    // }
+
+    // Use Route modeling binding
+
+    public function show(Todo $todo){
+
+        // $todo = Todo::findOrFail($todoId);
         return view('Todos.show', compact('todo'));
     }
 
@@ -46,6 +54,82 @@ class TodosController extends Controller
 
         Todo::create($todo);
 
+        // session
+        session()->flash('success','New todo successfully created.');
+
         return redirect('/mytasks');
     }
+
+    // public function edit($todoId){
+    //     // return $todoId;
+    //     $todo = Todo::findOrFail($todoId);
+    //     return view('Todos.edit',compact('todo'));
+    // }
+
+    // Use Route model binding
+    public function edit(Todo $todo){
+        // return $todoId;
+        // $todo = Todo::findOrFail($todoId);
+        return view('Todos.edit',compact('todo'));
+    }
+
+
+    public function update(Request $request, $todoId){
+
+        $this->validate($request,[
+            'name' => 'required|min:4|max:30|',
+            'description' => 'required'
+        ]);
+
+        $todo = $request->all();
+        $data = Todo::findOrFail($todoId);
+
+        $data->update($todo);
+
+        session()->flash('success','Todo updated successfully.');
+
+        return redirect('/mytasks');
+
+
+    }
+
+    // public function destroy($todoId){
+    //     Todo::findOrFail($todoId)->delete();
+    //     return redirect('/mytasks');
+    // }
+
+    // using route binding
+    public function destroy(Todo $todo){
+        // Todo::findOrFail($todoId)->delete();
+        $todo->delete();
+        session()->flash('success','Todo Deleted successfully.');
+        return redirect('/mytasks');
+    }
+
+    public function complete(Todo $todo){
+        $todo->completed = true;
+        $todo->save();
+
+        session()->flash('success','Todo completed successfully');
+        return redirect('/mytasks');
+    }
+
+    public function undo(Todo $todo){
+        $todo->completed = false;
+        $todo->save();
+
+        // dd($todo);
+
+        session()->flash('success','Todo uncompleted successfully');
+        return redirect('/mytasks');
+    }
+
+
+
+
+
+
+
+
+
 }

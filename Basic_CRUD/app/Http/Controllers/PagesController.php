@@ -8,24 +8,21 @@ class PagesController extends Controller
 {
     //
     public function index(){
-        $title = "Welcome to laravel Course";
+        $title = 'Welcome To Laravel!';
+        //return view('pages.index', compact('title'));
         return view('pages.index',compact('title'));
     }
 
-    public function  about(){
-        $title = "Welcome to laravel Course";
-        return view('pages.about');
+    public function about(){
+        $title = 'About Us';
+        return view('pages.about',compact('title'));
     }
 
-    public function  services(){
-        $title = "Welcome to laravel Course";
-
-        $info = [
-            'name'=> 'nahid',
-            'email'=> 'nahid@gmail.com',
-            'services'=> ['SEO','Fontend','Backend']
-        ];
-        return view('pages.services',compact('info'));
-//        return view('pages.services')->with($info);
+    public function services(){
+        $data = array(
+            'title' => 'Services',
+            'services' => ['Web Design', 'Programming', 'SEO']
+        );
+        return view('pages.services',compact('data'));
     }
 }

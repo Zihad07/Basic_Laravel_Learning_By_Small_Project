@@ -4,14 +4,14 @@
 @section('content');
 <h1>Welcome To Services</h1>
     <pre>
-        {{print_r($info)}}
+        {{print_r($data)}}
     </pre>
 
-    <li>{{$info['name']}}</li>
+    <li>{{$data['title']}}</li>
 
-    @if(count($info['services'])>0)
+    @if(count($data['services'])>0)
         <ul>
-            @foreach($info['services'] as $service)
+            @foreach($data['services'] as $service)
                 <li>{{$service}}</li>
             @endforeach
         </ul>

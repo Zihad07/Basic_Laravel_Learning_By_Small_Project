@@ -8,6 +8,14 @@ use App\Post;
 class PostsController extends Controller
 {
     /**
+     * For middleware
+     */
+    public function __construct()
+    {
+        $this->middleware('auth',['except'=>['index','show']]);
+    }
+
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
@@ -57,6 +65,7 @@ class PostsController extends Controller
         $post = new Post();
         $post->title = $input['title'];
         $post->body = $input['body'];
+        $post->user_id = auth()->user()->id;
         $post->save();
 //        $post->save(['title'=>$input->title, 'body'=>$input->body]);
 
@@ -76,6 +85,7 @@ class PostsController extends Controller
         //
         $post =  Post::findOrFail($id);
 
+
         return  view('posts.show',compact('post'));
     }
 
@@ -88,6 +98,13 @@ class PostsController extends Controller
     public function edit($id)
     {
         //
+        $post = Post::findOrFail($id);
+//        Check for Correct user
+
+        if(auth()->user()->id != $post->user_id){
+            return  redirect('posts')->with('error',"Unauthorized page");
+        }
+        return view('posts.edit',compact('post'));
     }
 
     /**
@@ -99,7 +116,26 @@ class PostsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+
+        $this->validate($request,[
+            'title' => 'required|max:50',
+            'body' => 'required',
+        ]);
+
+//        Created Post
+        $input = $request->all();
+//        return $input;
+
+        $post = Post::findOrFail($id);
+        $post->title = $input['title'];
+        $post->body = $input['body'];
+
+        $post->save();
+//        $post->save(['title'=>$input->title, 'body'=>$input->body]);
+
+        session()->flash('success', 'Posts Updated');
+        return redirect('/posts');
+
     }
 
     /**
@@ -111,5 +147,16 @@ class PostsController extends Controller
     public function destroy($id)
     {
         //
+        $post = Post::findOrFail($id);
+
+//        Check for Correct user
+        if(auth()->user()->id != $post->user_id){
+            redirect('posts')->with('error',"Unauthorized page");
+        }
+
+        $post->delete();
+
+        session()->flash('success','Post Successfully Deleted.');
+        return  redirect('/posts');
     }
 }

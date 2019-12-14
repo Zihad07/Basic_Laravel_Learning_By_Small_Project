@@ -1,4 +1,4 @@
-@extends('laouts.app');
+@extends('layouts.app');
 
 @section('content')
     <a href="/posts" class="btn btn-dark">Go Back</a>
@@ -14,6 +14,19 @@
                     <strong><small>Written on : {{$post->created_at}}</small></strong>
 
                 </div>
+
+                @if(!Auth::guest())
+                    @if(Auth::user()->id == $post->user_id)
+                    <div class="card-footer">
+                        <a href="/posts/{{$post->id}}/edit" class="btn btn-dark">Edit</a>
+
+    {{--                    <a href="/posts/{{$post->id}}/edit" class="btn btn-danger float-right">Delete</a>--}}
+                        {!! Form::open(['route' => ['posts.destroy',$post->id], 'method'=>'DELETE']) !!}
+                            {{Form::submit('Delete',['class'=>"btn btn-danger float-right"])}}
+                        {!! Form::close() !!}
+                    </div>
+                    @endif
+                @endif
             </div>
         </div>
     </div>

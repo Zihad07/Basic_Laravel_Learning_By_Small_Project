@@ -3,21 +3,21 @@
 
 @section('content')
 
-    <h1 class="display-6">Posts Create</h1>
+    <h1 class="display-6">Posts Update</h1>
 
     <div class="row">
         <div class="col-md-8 mx-auto">
             <div class="card card-body">
-                {!! Form::open(['route' => 'posts.store']) !!}
+                {!! Form::open(['route' => ['posts.update',$post->id], 'method'=>'PUT']) !!}
                     <div class="form-group">
                         {{Form::label('title','Title: ')}}
-                        {{Form::text('title','', ['class'=>'form-control','placeholder'=>'Title'])}}
+                        {{Form::text('title',$post->title, ['class'=>'form-control','placeholder'=>'Title'])}}
                     </div>
                     <div class="form-group">
                         {{Form::label('body','Detils: ')}}
-                        {{Form::textarea('body','', ['style'=>'height:100;','id'=>'editor','class'=>'form-control','placeholder'=>'Test....'])}}
+                        {{Form::textarea('body',$post->body, ['style'=>'height:100;','id'=>'editor','class'=>'form-control','placeholder'=>'Test....'])}}
                     </div>
-                {{Form::submit('Submit',['class'=>'btn btn-primary'])}}
+                {{Form::submit('Update',['class'=>'btn btn-success'])}}
                 {!! Form::close() !!}
             </div>
         </div>

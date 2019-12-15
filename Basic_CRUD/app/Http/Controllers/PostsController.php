@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
 use App\Post;
 
 class PostsController extends Controller
@@ -13,6 +14,7 @@ class PostsController extends Controller
     public function __construct()
     {
         $this->middleware('auth',['except'=>['index','show']]);
+
     }
 
     /**
@@ -54,6 +56,7 @@ class PostsController extends Controller
         $this->validate($request,[
             'title' => 'required|max:50',
             'body' => 'required',
+            'cover_image' => 'image|nullable|max:1999'
         ]);
 
 //        return  'validate';
@@ -62,9 +65,33 @@ class PostsController extends Controller
         $input = $request->all();
 //        return $input;
 
+//        Handle File Upload
+        if($request->hasFile('cover_image')){
+//            Get the File with the extention
+            $image = $request->file('cover_image');
+            $fileNameWithExt = $image->getClientOriginalExtension();
+//            File name
+            $fileName = explode('.',$image->getClientOriginalName())[0];
+
+//            File store
+            $fileNameToStore = $fileName.'_'.time().'.'.$fileNameWithExt;
+
+//            File Move
+
+            $image->move('image/',$fileNameToStore);
+
+
+
+//            dd($fileNameToStore);
+        }else{
+            $fileNameToStore = "noimage.jpg";
+        }
+
+
         $post = new Post();
         $post->title = $input['title'];
         $post->body = $input['body'];
+        $post->cover_image = $fileNameToStore;
         $post->user_id = auth()->user()->id;
         $post->save();
 //        $post->save(['title'=>$input->title, 'body'=>$input->body]);
@@ -120,15 +147,40 @@ class PostsController extends Controller
         $this->validate($request,[
             'title' => 'required|max:50',
             'body' => 'required',
+            'cover_image'=> 'image|nullable|max:1999'
         ]);
 
 //        Created Post
         $input = $request->all();
 //        return $input;
 
+//        Handle File Upload
+        if($request->hasFile('cover_image')){
+//            Get the File with the extention
+            $image = $request->file('cover_image');
+            $fileNameWithExt = $image->getClientOriginalExtension();
+//            File name
+            $fileName = explode('.',$image->getClientOriginalName())[0];
+
+//            File store
+            $fileNameToStore = $fileName.'_'.time().'.'.$fileNameWithExt;
+
+//            File Move
+
+            $image->move('image/',$fileNameToStore);
+
+
+
+//            dd($fileNameToStore);
+        }
+
         $post = Post::findOrFail($id);
         $post->title = $input['title'];
         $post->body = $input['body'];
+
+        if($request->hasFile('cover_image')){
+            $post->cover_image = $fileNameToStore;
+        }
 
         $post->save();
 //        $post->save(['title'=>$input->title, 'body'=>$input->body]);
@@ -154,6 +206,14 @@ class PostsController extends Controller
             redirect('posts')->with('error',"Unauthorized page");
         }
 
+//        Image Delete Handle
+        if($post->cover_image != 'noimage.jpg'){
+//            Delete Image
+            if(File::exists(public_path('image/'.$post->cover_image))){
+                File::delete(public_path('image/'.$post->cover_image));
+            }
+        }
+//        Then data delete from database
         $post->delete();
 
         session()->flash('success','Post Successfully Deleted.');

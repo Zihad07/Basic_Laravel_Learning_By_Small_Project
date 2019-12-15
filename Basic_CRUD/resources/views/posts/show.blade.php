@@ -4,9 +4,9 @@
     <a href="/posts" class="btn btn-dark">Go Back</a>
     <div class="row">
         <div class="col-md-8 mx-auto">
+            <img src="/image/{{$post->cover_image}}" alt="" class="img-fluid">
+            <br>
             <div class="card text-left">
-
-
                 <div class="card-body">
                     <h4 class="card-title">{{$post->title}}</h4>
                     <p class="card-text">{!!$post->body!!}</p>
@@ -32,3 +32,5 @@
     </div>
 
 @endsection
+
+

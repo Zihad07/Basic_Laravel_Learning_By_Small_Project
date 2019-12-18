@@ -11,6 +11,17 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+//Route::get('/', function () {
+//    return view('welcome');
+//});
+
+Route::get('/', 'AlbumsController@index');
+Route::get('/albums', 'AlbumsController@index');
+Route::get('/albums/create', 'AlbumsController@create');
+Route::get('/albums/{id}', 'AlbumsController@show');
+Route::post('/albums/store', 'AlbumsController@store');
+
+//photo upload
+Route::get('/photos/create/{id}', 'PhotosController@create');
+Route::post('/photos/store', 'PhotosController@store');
+

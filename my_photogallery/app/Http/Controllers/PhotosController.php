@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Photo;
+use App\Album;
+
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
 
 class PhotosController extends Controller
 {
@@ -32,7 +35,7 @@ class PhotosController extends Controller
             $fileNameToStore = $fileName.'_'.time().'.'.$fileNameWithExt;
 
 //            File Move
-            $image->move('photos/'.$request->input('album_id'), $fileNameToStore);
+            $image->move('album_photos/'.$request->input('album_id'), $fileNameToStore);
         }else{
             $fileNameToStore = 'noimage.jpg';
         }
@@ -41,7 +44,7 @@ class PhotosController extends Controller
         $photo->album_id = $request->input('album_id');
         $photo->title = $request->input('title');
         $photo->description = $request->input('description') ?? '';
-        $photo->size = $request->file('photo')->getSize() ??'0';
+        $photo->size = '0' ?? $request->file('photo')->getSize();
         $photo->photo = $fileNameToStore;
 
         $photo->save();
@@ -49,4 +52,32 @@ class PhotosController extends Controller
         return redirect('/albums/'.$request->input('album_id'))->with('success','New Album created successfully.');
 
     }
+
+    /**
+     * @param $id
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function show($id){
+        $photo = Photo::findOrFail($id);
+        return view('photos.show')->with('photo',$photo);
+    }
+
+    public function destroy($id){
+        $photo = Photo::findOrFail($id);
+
+//        Image Delete Handle
+        if($photo->photo != 'noimage.jpg'){
+//            Delete image
+            if(File::exists(public_path('album_photos/'.$photo->album_id.'/'.$photo->photo))){
+                File::delete(public_path('album_photos/'.$photo->album_id.'/'.$photo->photo));
+
+//                Form database
+                $photo->delete();
+
+                return redirect('/')->with('success','Photo succesfully Deleted');
+            }
+        }
+    }
+
+
 }

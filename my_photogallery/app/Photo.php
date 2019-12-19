@@ -10,6 +10,8 @@ class Photo extends Model
     protected $fillable = ['album_id','description','photo','title','size'];
 
 //    Relation
+
+
     public function album(){
         return $this->belongsTo('App\Album');
     }

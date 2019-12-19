@@ -24,4 +24,11 @@ Route::post('/albums/store', 'AlbumsController@store');
 //photo upload
 Route::get('/photos/create/{id}', 'PhotosController@create');
 Route::post('/photos/store', 'PhotosController@store');
+Route::get('/photos/{id}', 'PhotosController@show');
+
+
+//Route::get('/photos/{id}', function ($id) {
+//    return 'photo '.$id;
+//});
+Route::delete('/photos/{id}/delete', 'PhotosController@destroy');
 

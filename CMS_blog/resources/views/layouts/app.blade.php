@@ -73,7 +73,31 @@
         </nav>
 
         <main class="py-4">
-            @yield('content')
+{{--            @yield('content')--}}
+            <div class="container">
+               @auth
+                   @include('inc.flash_meassage')
+                    <div class="row">
+                        <div class="col-md-4">
+                            <ul class="list-group">
+                                <li class="list-group-item">
+                                    <a href="">Posts</a>
+                                </li>
+                                <li class="list-group-item">
+                                    <a href="{{route('categories.index')}}">Categories</a>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="col-md-8">
+                            @yield('content')
+                        </div>
+                    </div>
+                @else
+                    @yield('content')
+                @endauth
+
+            </div>
         </main>
     </div>
 </body>

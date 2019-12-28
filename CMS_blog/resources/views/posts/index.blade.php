@@ -29,7 +29,16 @@
                             <td>{{$post->title}}</td>
 
 
-                            @if(!$post->trashed())
+                            @if($post->trashed())
+                                <td>
+                                        
+                                    <form action="{{ route('undo-post',$post->id) }}" method="POST">
+                                        @csrf
+                                        @method('PUT')
+                                        <button type="submit" class="btn btn-sm btn-success">Restore</button>
+                                    </form>
+                                </td>
+                            @else
                                 <td>
                                     <a href="{{route('posts.edit',$post->id)}}" class="btn btn-sm btn-dark">Edit</a>
                                 </td>

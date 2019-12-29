@@ -4,3 +4,10 @@
     </div>
 
 @endif
+
+@if(session('error'))
+    <div class="alert alert-danger" role="alert">
+        <strong>{{session('error')}}</strong>
+    </div>
+
+@endif

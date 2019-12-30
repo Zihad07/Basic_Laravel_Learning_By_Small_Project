@@ -34,3 +34,10 @@ Route::middleware(['auth'])->group(function(){
     Route::put('restore-post/{post}','PostsController@postRestore')->name('undo-post');
 
 });
+
+
+Route::middleware(['auth','verifiIsAdmin'])->group(function(){
+    Route::get('users','UsersController@index')->name('users.index');
+    Route::post('users/{user}/make-admin','UsersController@makeAdmin')->name('users.make-admin');
+
+});

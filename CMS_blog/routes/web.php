@@ -25,6 +25,8 @@ Route::middleware(['auth'])->group(function(){
 
     Route::resource('categories','CategoriesController');
 
+    Route::resource('tags','TagsController');
+
     Route::resource('posts','PostsController');
 
     Route::get('trashed-posts','PostsController@trashed')->name('trashed-posts.index');

@@ -5,7 +5,7 @@
                 <li class="list-group-item text-danger">
                     {{$error}}
                 </li>
-                @endforeach
+            @endforeach
         </ul>
     </div>
-    @endif
+@endif

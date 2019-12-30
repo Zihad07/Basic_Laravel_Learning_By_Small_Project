@@ -6,6 +6,7 @@ use App\Category;
 use App\Http\Requests\CreatePostsRequest;
 use App\Http\Requests\UpdatePostRequest;
 use App\Post;
+use App\Tag;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -32,7 +33,7 @@ class PostsController extends Controller
      */
     public function create()
     {
-        return view('posts.create')->with('categories',Category::all());
+        return view('posts.create')->with('categories',Category::all())->with('tags',Tag::all());
     }
 
     /**
@@ -43,12 +44,13 @@ class PostsController extends Controller
      */
     public function store(CreatePostsRequest $request)
     {
+        // dd($request->all());
 //        upaload the image to storage
 //        dd($request->image->store('posts'));
         $image = $request->image->store('posts');
-
+ 
 //        create the post
-        Post::create([
+        $post = Post::create([
             'title'=>$request->input('title'),
             'description'=>$request->input('description'),
             'content'=>$request->input('content'),
@@ -57,6 +59,10 @@ class PostsController extends Controller
             'category_id' => $request->input('category'),
 
         ]);
+
+        if($request->tags){
+            $post->tags()->attach($request->tags);
+        }
 //        flash message
         session()->flash('success','Post created successfully');
 //        redirect user
@@ -82,7 +88,8 @@ class PostsController extends Controller
      */
     public function edit(Post $post)
     {
-        return view('posts.create')->with('post',$post)->with('categories',Category::all());
+        // dd($post->tags->pluck('id')->toarray());
+        return view('posts.create')->with('post',$post)->with('categories',Category::all())->with('tags',Tag::all());
     }
 
     /**
@@ -94,6 +101,7 @@ class PostsController extends Controller
      */
     public function update(UpdatePostRequest $request, Post $post)
     {
+        
 
         $data = $request->only(['title','description','published_at','content']);
 
@@ -107,6 +115,11 @@ class PostsController extends Controller
             
             // new image address save in data .
             $data['image'] = $new_image;
+        }
+
+        if($request->tags){
+            // updated tags table
+            $post->tags()->sync($request->tags);
         }
         
         // update attribute

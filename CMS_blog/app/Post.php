@@ -18,7 +18,23 @@ class Post extends Model
         Storage::delete($this->image);
     }
 
+    // Many to one
     public function category(){
         return $this->belongsTo(Category::class);
+    }
+
+    // Many to many
+    public function tags(){
+        return $this->belongsToMany(Tag::class);
+    }
+
+    /**
+     * if post has tags
+     *
+     * @param [type] $tagId
+     * @return boolean
+     */
+    public function hasTag($tagId){
+        return in_array($tagId,$this->tags->pluck('id')->toarray());
     }
 }

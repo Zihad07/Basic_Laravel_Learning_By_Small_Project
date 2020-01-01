@@ -11,9 +11,17 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+use App\Http\Controllers\Blog\PostsController;
+
+// Fontend ui
+Route::get('/', 'WelcomeController@index')->name('welcome');
+
+
+Route::get('blog/posts/{post}', 'PostController@show')->name('blog-show');
+
+
+// Fontend ui
+
 
 Auth::routes();
 

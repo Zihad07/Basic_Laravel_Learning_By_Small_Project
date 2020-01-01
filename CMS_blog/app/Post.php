@@ -10,7 +10,7 @@ class Post extends Model
 {
     use SoftDeletes;
 
-    protected $fillable = ['title','description','content','image','published_at','category_id'];
+    protected $fillable = ['title','description','content','image','published_at','category_id','user_id'];
 
     public function deleteImage()
     {
@@ -36,5 +36,14 @@ class Post extends Model
      */
     public function hasTag($tagId){
         return in_array($tagId,$this->tags->pluck('id')->toarray());
+    }
+
+    /**
+     * many to one
+     *
+     * @return usertable
+     */
+    public function user(){
+        return $this->belongsTo(User::class);
     }
 }

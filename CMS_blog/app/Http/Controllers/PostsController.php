@@ -57,6 +57,7 @@ class PostsController extends Controller
             'image'=>$image,
             'published_at'=>$request->input('published_at'),
             'category_id' => $request->input('category'),
+            'user_id'=>auth()->user()->id
 
         ]);
 

@@ -49,13 +49,15 @@
     <div class="container">
 
      
-
+    {{-- share icon --}}
+    <div class="addthis_inline_share_toolbox_qn63"></div>
+    
     <p>{{ $post->content }}</p>
-     
+    
     <div class="row">
         <div class="gap-xy-2 mt-6">
             @foreach ($post->tags as $tag)
-               <a href="#" class="badge badge-pill badge-primary">{{ $tag->name }}</a> 
+               <a href="{{ route('blog-tag',$tag->id) }}" class="badge badge-pill badge-primary">{{ $tag->name }}</a> 
             @endforeach
         </div>
     </div>

@@ -18,6 +18,9 @@ Route::get('/', 'WelcomeController@index')->name('welcome');
 
 
 Route::get('blog/posts/{post}', 'PostController@show')->name('blog-show');
+Route::get('blog/posts/{post}', 'PostController@show')->name('blog-show');
+Route::get('blog/categories/{category}', 'PostController@category')->name('blog-category');
+Route::get('blog/tags/{tag}', 'PostController@tag')->name('blog-tag');
 
 
 // Fontend ui

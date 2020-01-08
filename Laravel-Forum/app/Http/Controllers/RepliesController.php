@@ -3,18 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Discussion;
-use App\Http\Requests\CreateDiscussionRequest;
-use App\Reply;
+use App\Http\Requests\CreateReplyRequest;
+use App\Notifications\NewReplyAdded;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 
-class DiscussionsController extends Controller
+class RepliesController extends Controller
 {
-
-    public function __construct()
-    {
-        $this->middleware('auth')->only(['create','store']);
-    }
     /**
      * Display a listing of the resource.
      *
@@ -22,7 +16,7 @@ class DiscussionsController extends Controller
      */
     public function index()
     {
-        return view('discussions.index')->with('discussions',Discussion::paginate(3));
+        //
     }
 
     /**
@@ -32,7 +26,7 @@ class DiscussionsController extends Controller
      */
     public function create()
     {
-        return view('discussions.create');
+        //
     }
 
     /**
@@ -41,21 +35,18 @@ class DiscussionsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(CreateDiscussionRequest $request)
+    public function store(CreateReplyRequest $request,Discussion $discussion)
     {
-        auth()->user()->discussions()->create([
-            'title'=>$request->title,
+        auth()->user()->replies()->create([
             'content'=>$request->content,
-            'channel_id'=>$request->channel,
-            'slug'=>Str::slug($request->title,'-')
+            'discussion_id'=>$discussion->id
         ]);
 
         // send notification
+        $discussion->user->notify(new NewReplyAdded($discussion));
         
-
-        session()->flash('success','Discussion successfulyy posted.');
-
-       return redirect()->route('discussions.index');
+        session()->flash('success','Repply added');
+        return redirect()->route('discussions.show',$discussion->slug);
     }
 
     /**
@@ -64,10 +55,9 @@ class DiscussionsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Discussion $discussion)
+    public function show($id)
     {
-        // dd($discussion);
-        return view('discussions.show')->with('discussion',$discussion);
+        //
     }
 
     /**
@@ -102,11 +92,5 @@ class DiscussionsController extends Controller
     public function destroy($id)
     {
         //
-    }
-
-    public function reply(Discussion $discussion, Reply $reply){
-        $discussion->markAsBest($reply);
-        session()->flash('success','Mark as best reply.');
-        return redirect()->back();
     }
 }

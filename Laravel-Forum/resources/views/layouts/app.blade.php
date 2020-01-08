@@ -9,13 +9,13 @@
 
     <title>{{ config('app.name', 'Laravel') }}</title>
 
-    <!-- Scripts -->
-    <script src="{{ asset('js/app.js') }}" defer></script>
+    
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
 
+    @yield('css')
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 </head>
@@ -33,7 +33,15 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav mr-auto">
+                       @auth
+                       <a href="{{route('read-notifications')}}" class="btn btn-dark">
+                        <span class="badge badge-pill badge-primary">
+                            {{ auth()->user()->unreadNotifications->count() }}
+                        </span>
 
+                            Unread Notifications
+                    </a>    
+                       @endauth
                     </ul>
 
                     <!-- Right Side Of Navbar -->
@@ -72,16 +80,29 @@
             </div>
         </nav>
 
-        @auth
+        @if(!in_array(request()->path(),['login','register','password/reset','password/email']))
             <main class="py-4">
                 <div class="container">
                     <div class="row">
                         <div class="col-md-4">
-                            <ul class="list-group">
-                                @foreach ($channels as $channel)
-                                <li class="list-group-item">{{ $channel->name }}</li>
-                                @endforeach
-                            </ul>
+                            
+                            @auth
+                                <a href="{{ route('discussions.create') }}" class="btn btn-primary mb-2" style="width:100%;">Add discussion</a>   
+                            @else 
+                            <a href="{{ route('login') }}" class="btn btn-primary mb-2" style="width:100%;">Login Add discussion</a>
+                            @endauth
+                            <div class="card">
+                                <div class="card-header">
+                                    <h2>Channels</h2>
+                                </div>
+                                <div class="card-body">
+                                    <ul class="list-group">
+                                        @foreach ($channels as $channel)
+                                        <li class="list-group-item">{{ $channel->name }}</li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            </div>
                         </div>
     
                         <div class="col-md-8">
@@ -94,7 +115,11 @@
         <main class="py-4">
             @yield('content')
         </main>
-        @endauth
+        @endif
     </div>
+
+    <!-- Scripts -->
+    <script src="{{ asset('js/app.js') }}"></script>
+    @yield('js')
 </body>
 </html>

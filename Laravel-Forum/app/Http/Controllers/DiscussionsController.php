@@ -13,7 +13,7 @@ class DiscussionsController extends Controller
 
     public function __construct()
     {
-        $this->middleware('auth')->only(['create','store']);
+        $this->middleware(['auth','verified'])->only(['create','store']);
     }
     /**
      * Display a listing of the resource.
@@ -22,9 +22,9 @@ class DiscussionsController extends Controller
      */
     public function index()
     {
-        return view('discussions.index')->with('discussions',Discussion::paginate(3));
+        return view('discussions.index')->with('discussions',Discussion::fileterByChannels()->paginate(3));
     }
-
+ 
     /**
      * Show the form for creating a new resource.
      *
@@ -110,3 +110,4 @@ class DiscussionsController extends Controller
         return redirect()->back();
     }
 }
+ 

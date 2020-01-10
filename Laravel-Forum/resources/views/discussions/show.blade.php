@@ -15,21 +15,22 @@
         {!! $discussion->content !!}
 
         @if ($discussion->bestReply)
-            <div class="card bg-primary my-3" style="color:#fff;">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                        <div>
-                                <img height="40px" width="40px" style="border-radius:50%;" src="{{ Gravatar::get($discussion->bestReply->owner->email) }}" alt="">
-                                <span class="ml-2">{{ $discussion->bestReply->owner->name }}</span>
-                        </div>
-
-                        <div>
-                                <strong>Best Reply</strong>
-                        </div>
+        <div class="card bg-primary my-3" style="color:#fff;">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <div>
+                    <img height="40px" width="40px" style="border-radius:50%;"
+                        src="{{ Gravatar::get($discussion->bestReply->owner->email) }}" alt="">
+                    <span class="ml-2">{{ $discussion->bestReply->owner->name }}</span>
                 </div>
-                <div class="card-body">
-                        {!! $discussion->bestReply->content !!}
+
+                <div>
+                    <strong>Best Reply</strong>
                 </div>
             </div>
+            <div class="card-body">
+                {!! $discussion->bestReply->content !!}
+            </div>
+        </div>
         @endif
     </div>
 </div>
@@ -47,14 +48,17 @@
             </div>
 
             <div>
-               @if (auth()->user()->id === $discussion->user_id)
-                   
-               <form action="{{ route('mark.best-reply',['discussion'=>$discussion->slug,'reply'=>$reply->id]) }}" method="post">
-                        @csrf
-                        <button class="btn btn-success btn-sm">Mark as best Reply</button>
-                    </form>
-                   
-               @endif
+                @auth
+                @if (auth()->user()->id === $discussion->user_id)
+
+                <form action="{{ route('mark.best-reply',['discussion'=>$discussion->slug,'reply'=>$reply->id]) }}"
+                    method="post">
+                    @csrf
+                    <button class="btn btn-success btn-sm">Mark as best Reply</button>
+                </form>
+
+                @endif
+                @endauth
             </div>
         </div>
 

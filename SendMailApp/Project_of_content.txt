@@ -1,0 +1,7 @@
+
+01 Make Route
+02 Create a Contact form
+03 Make a controller for handle form request
+04 Contact form validation
+05 Mail configuration
+06 Test the contact form
